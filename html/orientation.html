@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>ジャイロセンサー</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+  </head>
+  <body>
+    ジャイロセンサー：
+    <dl>
+      <dt>α</dt><dd id="アルファ"></dd>
+      <dt>β</dt><dd id="ベータ"></dd>
+      <dt>γ</dt><dd id="ガンマ"></dd>
+    </dl>
+    <script>
+      window.addEventListener("deviceorientation", function (event) {
+        var alpha = event.alpha;
+        var beta = event.beta;
+        var gamma = event.gamma;
+        $("#アルファ").text(alpha);
+        $("#ベータ").text(beta);
+        $("#ガンマ").text(gamma);
+      });
+    </script>
+  </body>
+</html>

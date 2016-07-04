@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>加速度センサー（長間隔）</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+  </head>
+  <body>
+    加速度センサー（長間隔）：
+    <dl>
+      <dt>x</dt><dd id="加速度x"></dd>
+      <dt>y</dt><dd id="加速度y"></dd>
+      <dt>z</dt><dd id="加速度z"></dd>
+    </dl>
+    <script>
+      タイマーオブジェクト = null;
+      window.addEventListener("devicemotion", function (event) {
+        if (タイマーオブジェクト === null) {
+          タイマーオブジェクト = setTimeout(function () {
+            var x = event.acceleration.x;
+            var y = event.acceleration.y;
+            var z = event.acceleration.z;
+            $("#加速度x").text(x);
+            $("#加速度y").text(y);
+            $("#加速度z").text(z);
+            $.ajax({ //サーバへの通知
+              type: "GET",
+              url: "sensor",
+              data: {"x": x, "y": y, "z": z},
+              success: function (msg) {
+                console.log(msg); //
+              }
+            });
+            タイマーオブジェクト = null;
+          }, 1000);
+        }
+      });
+    </script>
+  </body>
+</html>

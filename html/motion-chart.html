@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>加速度センサー（チャート）</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+  </head>
+  <body>
+    <div id="curve_chart" style="width: 400px; height: 300px"></div>
+    <script>
+      google.charts.load('current', {'packages': ['corechart']});
+      var options = {
+        curveType: 'function',
+        legend: {position: 'bottom'}
+      };
+
+      var rawData = [['t', 'x', 'y', 'z']];
+      var t = 0;
+
+      タイマーオブジェクト = null;
+      window.addEventListener("devicemotion", function (event) {
+        if (タイマーオブジェクト === null) {
+          var x = event.acceleration.x;
+          var y = event.acceleration.y;
+          var z = event.acceleration.z;
+          rawData.push([t++, x, y, z]);
+          if (google.visualization) {
+            var data = google.visualization.arrayToDataTable(rawData);
+            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+            chart.draw(data, options);
+          }
+          タイマーオブジェクト = setTimeout(function () {
+            タイマーオブジェクト = null;
+          }, 500);
+        }
+      });
+    </script>
+  </body>
+</html>

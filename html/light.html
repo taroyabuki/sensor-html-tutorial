@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>照度センサー</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+  </head>
+  <body>
+    照度センサー：<span id="結果"></span>
+    <script>
+      window.addEventListener("devicelight", function (event) {
+        var 読み取った値 = event.value;
+        $("#結果").text(読み取った値);
+      });
+    </script>
+  </body>
+</html>

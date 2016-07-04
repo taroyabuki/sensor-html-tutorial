@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>センサーたち</title>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <script>
+      //http://w3c.github.io/deviceorientation/spec-source-orientation.html
+      var degtorad = Math.PI / 180; // Degree-to-Radian conversion
+
+      function compassHeading(alpha, beta, gamma) {
+
+        var _x = beta ? beta * degtorad : 0; // beta value
+        var _y = gamma ? gamma * degtorad : 0; // gamma value
+        var _z = alpha ? alpha * degtorad : 0; // alpha value
+
+        var cX = Math.cos(_x);
+        var cY = Math.cos(_y);
+        var cZ = Math.cos(_z);
+        var sX = Math.sin(_x);
+        var sY = Math.sin(_y);
+        var sZ = Math.sin(_z);
+
+        // Calculate Vx and Vy components
+        var Vx = -cZ * sY - sZ * sX * cY;
+        var Vy = -sZ * sY + cZ * sX * cY;
+
+        // Calculate compass heading
+        var compassHeading = Math.atan(Vx / Vy);
+
+        // Convert compass heading to use whole unit circle
+        if (Vy < 0) {
+          compassHeading += Math.PI;
+        } else if (Vx < 0) {
+          compassHeading += 2 * Math.PI;
+        }
+
+        return compassHeading * (180 / Math.PI); // Compass Heading (in degrees)
+
+      }
+
+      var map;
+      $(document).ready(function () {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var lat = position.coords.latitude;
+          var lng = position.coords.longitude;
+          $("#lat").text(lat);
+          $("#lng").text(lng);
+          $("#accuracy").text(position.coords.accuracy);
+          var latlng = new google.maps.LatLng(lat, lng);
+          map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 15,
+            center: latlng
+          });
+          var marker = new google.maps.Marker({
+            map: map,
+            position: latlng
+          });
+        }, function () {
+          console.log('位置情報取得失敗');
+        });
+
+
+        var deviceorientationTimer = null;
+        window.addEventListener("deviceorientation", function (event) {
+          if (deviceorientationTimer === null) {
+            deviceorientationTimer = setTimeout(function () {
+              var alpha = event.alpha;
+              var beta = event.beta;
+              var gamma = event.gamma;
+              var compass = compassHeading(alpha, beta, gamma);
+              $("#alpha").text(alpha);
+              $("#beta").text(beta);
+              $("#gamma").text(gamma);
+              $("#compass").text(compass);
+              deviceorientationTimer = null;
+            }, 500);
+          }
+        });
+
+
+        var devicemotionTimer = null;
+        window.addEventListener("devicemotion", function (event) {
+          if (devicemotionTimer === null) {
+            devicemotionTimer = setTimeout(function () {
+              $("#x").text(event.acceleration.x);
+              $("#y").text(event.acceleration.y);
+              $("#z").text(event.acceleration.z);
+              devicemotionTimer = null;
+            }, 500);
+          }
+        });
+
+
+        var devicelightTimer = null;
+        window.addEventListener("devicelight", function (event) {
+          if (devicelightTimer === null) {
+            devicelightTimer = setTimeout(function () {
+              $("#lux").text(event.value);
+              devicelightTimer = null;
+            }, 500);
+          }
+        });
+
+
+        window.addEventListener("deviceproximity", function (event) {
+          if (!event.value) {
+            $("#proximity").text("近い");
+          } else {
+            $("#proximity").text("遠い");
+          }
+        });
+
+
+        $("#vibration").click(function () {
+          navigator.vibrate(2000);
+        });
+      });
+    </script>
+    <style>
+      #map {width:300px; height:300px;}
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <dl>
+      <dt>位置情報</dt>
+      <dd><ul>
+          <li>緯度：<span id="lat">-</span></li>
+          <li>経度：<span id="lng">-</span></li>
+          <li>誤差：<span id="accuracy">-</span> m</li>
+        </ul></dd>
+      <dt>ジャイロセンサー</dt>
+      <dd><ul>
+          <li>X回転：<span id="beta">-</span></li>
+          <li>Y回転：<span id="gamma">-</span></li>
+          <li>Z回転：<span id="alpha">-</span></li>
+          <li>方角：<span id="compass">-</span></li>
+        </ul></dd>
+      <dt>加速度センサー</dt>
+      <dd><ul>
+          <li>x：<span id="x">-</span></li>
+          <li>y：<span id="y">-</span></li>
+          <li>z：<span id="z">-</span></li>
+        </ul></dd>
+      <dt>照度センサー</dt>
+      <dd><span id="lux">-</span> lux</dd>
+      <dt>近接センサー</dt>
+      <dd><span id="proximity">遠い</span></dd>
+    </dl>
+    <button id="vibration">バイブ</button>
+  </body>
+</html>

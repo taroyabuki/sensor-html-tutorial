@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>加速度センサー</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+  </head>
+  <body>
+    加速度センサー：
+    <dl>
+      <dt>x</dt><dd id="加速度x"></dd>
+      <dt>y</dt><dd id="加速度y"></dd>
+      <dt>z</dt><dd id="加速度z"></dd>
+    </dl>
+    <script>
+      window.addEventListener("devicemotion", function (event) {
+        var x = event.acceleration.x;
+        var y = event.acceleration.y;
+        var z = event.acceleration.z;
+        $("#加速度x").text(x);
+        $("#加速度y").text(y);
+        $("#加速度z").text(z);
+      });
+    </script>
+  </body>
+</html>
