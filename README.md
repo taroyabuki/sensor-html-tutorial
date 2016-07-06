@@ -50,6 +50,7 @@ sudo tail -f /var/log/apache2/access.log
 
 ### リモートデバッグ
 
+1. （Android端末）PCに[Google USB Driver](https://developer.android.com/studio/run/win-usb.html)をインストールする。
 1. （Android端末）開発者向けオプションを有効にする。
 1. （Android端末）USBデバッグを有効にする。
 1. （Android端末）Firefoxの設定→高度な設定→「USB経由でリモートでバッグをおこなう」を有効にする。
