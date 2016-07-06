@@ -64,7 +64,7 @@ sudo tail -f /var/log/apache2/access.log
 
 ### チャートを描く
 
-センサーの値のような時系列データは，折れ線グラフを描くとわかりやすい。グラフを描く簡単な方法の一つに，Google Chartsがある。
+センサーの値のような時系列データは，折れ線グラフを描くとわかりやすい。グラフを描く簡単な方法の一つに，[Google Charts](https://developers.google.com/chart/)がある。
 
 * [加速度センサー（チャート）](motion-chart.html)
 
