@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>位置情報センサー</title>
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <script>
+      var map;
+      $(document).ready(function () {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var lat = position.coords.latitude;
+          var lng = position.coords.longitude;
+          $("#lat").text(lat);
+          $("#lng").text(lng);
+          $("#accuracy").text(position.coords.accuracy);
+        }, function () {
+          console.log('位置情報取得失敗');
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <dl>
+      <dt>緯度</dt><dd id="lat">-</dd>
+      <dt>経度</dt><dd id="lng">-</dd>
+      <dt>誤差</dt><dd id="accuracy">-</dd>
+    </dl>
+  </body>
+</html>
